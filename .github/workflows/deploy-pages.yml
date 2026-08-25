@@ -7,28 +7,47 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: pages-main
+  cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-deploy:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
+
       - run: npm ci
-      - run: npm run build
+
+      - name: Build site
+        run: npm run build
         env:
           GITHUB_PAGES: "true"
-      - name: Deploy to gh-pages branch
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+
+      - name: Sync built files to repo root
+        run: |
+          cp dist/index.html dist/changelog.html dist/privacy.html .
+          cp dist/favicon.ico dist/icon-light.svg dist/icon-dark.svg dist/apple-icon.png .
+          rm -rf assets fonts
+          cp -r dist/assets assets
+          cp -r dist/fonts fonts
+          touch .nojekyll
+
+      - name: Commit and push to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html changelog.html privacy.html favicon.ico icon-light.svg icon-dark.svg apple-icon.png assets fonts .nojekyll
+          if git diff --staged --quiet; then
+            echo "No deploy changes"
+            exit 0
+          fi
+          git commit -m "deploy: build site for GitHub Pages [skip ci]"
+          git push
