@@ -22,9 +22,7 @@ function bindVideos() {
 }
 
 function bindDrag() {
-  document.querySelectorAll(".vidwin, .m-decor, .abs.win-wrap").forEach((el) => {
-    if (el.id === "hero-center" || el.classList.contains("headline-wrap")) return;
-
+  document.querySelectorAll(".hero .abs, .hero .win-wrap").forEach((el) => {
     let sx = 0;
     let sy = 0;
     let ox = 0;
