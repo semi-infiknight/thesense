@@ -8,16 +8,155 @@ function tickClock() {
 }
 
 function bindVideos() {
-  document.querySelectorAll(".vidwin video, .hellomov video").forEach((video) => {
-    const play = () => video.play().catch(() => {});
-    const pause = () => {
-      video.pause();
-      video.currentTime = 0;
+  document.querySelectorAll(".hero > video.abs").forEach((video) => {
+    video.play().catch(() => {});
+  });
+}
+
+const FOCUS_ANCHORS = {
+  fystack: "top-left",
+  "nova-link": "bottom-left",
+  "magicblock-thailand": "top-center",
+  "hackseasons": "top-right",
+  "intern-cooked": "top-right",
+  "mikado-defi": "bottom-left",
+  "mikado-yield": "bottom-right",
+  "nova-launch": "bottom-right",
+  "magicblock-apply": "bottom-left",
+};
+
+function focusAnchor(wrap) {
+  const caption = wrap.querySelector(".win-caption")?.textContent || "";
+  for (const [key, anchor] of Object.entries(FOCUS_ANCHORS)) {
+    if (caption.includes(key)) return anchor;
+  }
+  return "top-left";
+}
+
+function syncVideoFocus() {
+  const active = document.querySelector(".vidwin.video-active, #big-video.video-active");
+  document.body.classList.toggle("video-focus", !!active);
+}
+
+function bindVideoFocus() {
+  let bigVideoWasPlaying = false;
+  let resumeBigVideoTimer = null;
+
+  document.querySelectorAll(".vidwin").forEach((wrap) => {
+    const screen = wrap.querySelector(".screen");
+    const video = screen?.querySelector("video");
+    const win = wrap.querySelector(".win") || wrap;
+    if (!screen || !video) return;
+
+    const baseW = parseFloat(screen.style.width) || screen.getBoundingClientRect().width;
+    const baseH = parseFloat(screen.style.height) || screen.getBoundingClientRect().height;
+    const growW = baseW * 0.5;
+    const growH = baseH * 0.5;
+    const anchor = focusAnchor(wrap);
+
+    let shiftX = 0;
+    let shiftY = 0;
+    if (anchor === "top-center") shiftX = -growW / 2;
+    else if (anchor === "top-right") shiftX = -growW;
+    else if (anchor === "bottom-left") shiftY = -growH;
+    else if (anchor === "bottom-right") {
+      shiftX = -growW;
+      shiftY = -growH;
+    }
+
+    let active = false;
+    let anim = 0;
+    let progress = 0;
+
+    const tick = () => {
+      anim = 0;
+      const target = active ? 1 : 0;
+      progress += (target - progress) * 0.22;
+      if (Math.abs(target - progress) > 0.0015) anim = requestAnimationFrame(tick);
+      else progress = target;
+
+      screen.style.width = `${baseW + growW * progress}px`;
+      screen.style.height = `${baseH + growH * progress}px`;
+      wrap.style.transform = progress
+        ? `translate(${shiftX * progress}px, ${shiftY * progress}px)`
+        : "";
     };
-    const host = video.closest(".vidwin, .win-wrap, .hellomov") || video;
-    host.addEventListener("mouseenter", play);
-    host.addEventListener("mouseleave", pause);
-    host.addEventListener("click", play);
+
+    const setFocus = (on) => {
+      if (on === active) return;
+      active = on;
+      wrap.classList.toggle("video-active", on);
+      syncVideoFocus();
+
+      if (on) {
+        clearTimeout(resumeBigVideoTimer);
+        const bigVid = document.querySelector("#big-video video");
+        if (bigVid && !bigVid.paused) {
+          bigVid.pause();
+          bigVideoWasPlaying = true;
+        }
+        const canUnmute = navigator.userActivation?.hasBeenActive;
+        video.muted = !canUnmute;
+        video.volume = 1;
+        video.play().catch(() => {
+          video.muted = true;
+          video.play().catch(() => {});
+        });
+      } else {
+        video.pause();
+        clearTimeout(resumeBigVideoTimer);
+        resumeBigVideoTimer = setTimeout(() => {
+          if (!document.querySelector(".vidwin.video-active, #big-video.video-active") && bigVideoWasPlaying) {
+            bigVideoWasPlaying = false;
+            document.querySelector("#big-video video")?.play().catch(() => {});
+          }
+        }, 80);
+      }
+
+      if (!anim) anim = requestAnimationFrame(tick);
+    };
+
+    win.addEventListener("mouseenter", () => setFocus(true));
+    win.addEventListener("mouseleave", () => setFocus(false));
+
+    screen.addEventListener("click", (e) => {
+      if (e.target.closest(".win-zoom-btn")) return;
+      e.stopPropagation();
+      if (video.paused) video.play().catch(() => {});
+      else video.pause();
+    });
+  });
+
+  const bigWrap = document.getElementById("big-video");
+  const bigVid = bigWrap?.querySelector("video");
+  const hellomov = bigWrap?.querySelector(".hellomov");
+  if (!bigWrap || !bigVid || !hellomov) return;
+
+  let bigActive = false;
+
+  const setBigFocus = (on) => {
+    if (on === bigActive) return;
+    bigActive = on;
+    bigWrap.classList.toggle("video-active", on);
+    syncVideoFocus();
+
+    if (on) {
+      clearTimeout(resumeBigVideoTimer);
+      document.querySelectorAll(".vidwin.video-active").forEach((w) => w.classList.remove("video-active"));
+      bigVid.muted = true;
+      bigVid.play().catch(() => {});
+    } else {
+      bigVid.pause();
+    }
+  };
+
+  hellomov.addEventListener("mouseenter", () => setBigFocus(true));
+  hellomov.addEventListener("mouseleave", () => setBigFocus(false));
+  hellomov.addEventListener("click", (e) => {
+    if (e.target.closest(".win-zoom-btn")) return;
+    e.stopPropagation();
+    if (bigVid.paused) bigVid.play().catch(() => {});
+    else bigVid.pause();
   });
 }
 
@@ -176,6 +315,7 @@ function bindNav() {
 tickClock();
 setInterval(tickClock, 30_000);
 bindVideos();
+bindVideoFocus();
 bindDrag();
 bindModals();
 bindNowPlaying();

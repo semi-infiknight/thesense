@@ -11,6 +11,11 @@ body {
 
 .dragging { cursor: grabbing !important; z-index: 80; }
 
+.hero > .abs { transition: opacity 0.35s ease; }
+.vidwin { will-change: left, top, transform; }
+.vidwin.video-active { z-index: 100; }
+body.video-focus #big-video.video-active { opacity: 1; }
+
 .hero-modal-backdrop {
   position: fixed;
   inset: 0;
