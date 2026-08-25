@@ -63,8 +63,22 @@ body {
   translate: none;
   scale: 1;
 }
-.flow-stage .reveal {
-  opacity: 1 !important;
-  translate: none;
-  scale: 1;
+
+html.canvas-site,
+html.canvas-site body {
+  height: 100%;
+  overflow: hidden;
+}
+
+.canvas-only.stage {
+  width: min(1440px, 100%);
+  height: auto;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.canvas-only .hero {
+  width: 100%;
+  min-height: calc(100vh - 52px);
+  height: auto;
 }
