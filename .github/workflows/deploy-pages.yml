@@ -40,7 +40,7 @@ jobs:
 
       - name: Sync built files to repo root
         run: |
-          cp dist/index.html dist/changelog.html dist/privacy.html .
+          cp dist/pages/index.html dist/pages/changelog.html dist/pages/privacy.html .
           cp dist/favicon.ico dist/icon-light.svg dist/icon-dark.svg dist/apple-icon.png .
           rm -rf assets fonts
           cp -r dist/assets assets
