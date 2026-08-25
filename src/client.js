@@ -231,13 +231,13 @@ function bindModals() {
     const open = () => {
       if (i === 0 || (btn.getAttribute("aria-label") || "").includes("team")) {
         modal({
-          title: "the-ogs.png",
-          body: `<img src="/assets/hero-modal-team.avif" alt="the heyclicky team">`,
+          title: "the-sense-profile.jpg",
+          body: `<img src="/assets/sense/identity/the-sense-banner.jpg" alt="The Sense studio profile">`,
         });
       } else {
         modal({
-          title: "heyclicky-trailer.mov",
-          body: `<video src="/assets/hero-modal-trailer.mp4" autoplay controls playsinline></video>`,
+          title: "the-sense-showreel.mov",
+          body: `<video src="/assets/sense/sense-01.mp4" autoplay controls playsinline></video>`,
         });
       }
     };

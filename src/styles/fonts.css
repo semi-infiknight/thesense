@@ -16,6 +16,129 @@ body {
 .vidwin.video-active { z-index: 100; }
 body.video-focus #big-video.video-active { opacity: 1; }
 
+.sense-logo {
+  width: auto;
+  height: 42px;
+  gap: 5px;
+  display: flex;
+  align-items: center;
+  color: #111;
+  text-decoration: none;
+}
+.sense-logo-word {
+  font-family: var(--font-geist-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: -0.9px;
+  line-height: .82;
+}
+.sense-logo-loop {
+  font-family: Arial, sans-serif;
+  font-size: 29px;
+  font-weight: 400;
+  line-height: 1;
+}
+.sense-sticker {
+  z-index: 4;
+  box-shadow: 0 9px 18px rgba(0, 0, 0, .13);
+  color: #151515;
+  cursor: grab;
+  user-select: none;
+}
+.sense-sticker-manifesto {
+  width: 146px;
+  padding: 11px 12px 10px;
+  background: #111;
+  color: #f4f1e8;
+  border-radius: 2px;
+  font-family: var(--font-geist-mono);
+  line-height: 1.08;
+}
+.sense-sticker-manifesto span {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -1.1px;
+}
+.sense-sticker-manifesto small {
+  color: #b7ff3d;
+  font-size: 8px;
+  letter-spacing: -.35px;
+}
+.sense-sticker-vn {
+  width: 108px;
+  padding: 10px;
+  background: #d6ff3f;
+  border: 1px solid #111;
+  border-radius: 50%;
+  font-family: var(--font-geist-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -1px;
+  line-height: .9;
+  text-align: center;
+}
+.sense-sticker-vn i {
+  display: block;
+  width: fit-content;
+  margin: 8px auto 0;
+  padding: 2px 4px;
+  background: #ff493c;
+  color: #fff;
+  font-size: 8px;
+  font-style: normal;
+  letter-spacing: .5px;
+}
+.sense-sticker-summit {
+  width: 128px;
+  padding: 10px;
+  background: #ff633e;
+  color: #120b08;
+  border: 2px solid #120b08;
+  font-family: var(--font-geist-mono);
+  font-size: 10px;
+  line-height: 1;
+}
+.sense-sticker-summit b {
+  display: block;
+  margin: 3px 0;
+  font-family: var(--font-inter);
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -2.7px;
+}
+.sense-sticker-summit small {
+  font-size: 8px;
+  letter-spacing: .3px;
+}
+.sense-sticker-brief {
+  width: 98px;
+  padding: 9px;
+  background: #f6f1e8;
+  border: 1px solid #1a1a1a;
+  font-family: var(--font-geist-mono);
+  line-height: .88;
+}
+.sense-sticker-brief small {
+  display: block;
+  margin-bottom: 7px;
+  color: #f44336;
+  font-size: 7px;
+  letter-spacing: .2px;
+}
+.sense-sticker-brief span {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -1.25px;
+}
+.sense-avatar {
+  z-index: 4;
+  border: 3px solid #f7f5ef;
+  border-radius: 50%;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .18);
+}
+
 .hero-modal-backdrop {
   position: fixed;
   inset: 0;
