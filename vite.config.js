@@ -8,9 +8,9 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        main: resolve(import.meta.dirname, "index.html"),
-        changelog: resolve(import.meta.dirname, "changelog.html"),
-        privacy: resolve(import.meta.dirname, "privacy.html"),
+        main: resolve(import.meta.dirname, "pages/index.html"),
+        changelog: resolve(import.meta.dirname, "pages/changelog.html"),
+        privacy: resolve(import.meta.dirname, "pages/privacy.html"),
       },
     },
   },
